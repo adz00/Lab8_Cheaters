@@ -78,12 +78,32 @@ int main(int argc, char *argv[])
 
     int chunkLimit = atoi(argv[3]);
 
+    vector<vector<int>> pairs;
     for (int i=0; i<files.size(); i++) {
         for (int j=0; j<files.size(); j++) {
             if (comp[i][j] >= chunkLimit) {
-                cout << comp[i][j] << ", " << files[i] << ", " << files[j] << endl;
+                vector<int> pair;
+                pair.push_back(comp[i][j]);
+                pair.push_back(i);
+                pair.push_back(j);
+                pairs.push_back(pair);
             }
         }
+    }
+
+    for (int i=0; i<pairs.size()-1; i++) {
+        int largest = i;
+        for (int j=i+1; j<pairs.size(); j++) {
+            if (pairs[j][0] > pairs[largest][0]) {
+                largest = j;
+            }
+        }
+        vector<int> temp = pairs[largest];
+        pairs[largest] = pairs[i];
+        pairs[i] = temp;
+    }
+    for (int i=0; i<pairs.size(); i++) {
+        cout << pairs[i][0] << ", " << files[pairs[i][1]] << ", " << files[pairs[i][2]] << endl;
     }
 
     return 0;
